@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server/index.js",
     "compile": "webpack",
-    "watch" : "webpack --watch",
+    "watch": "webpack --watch",
     "commit": "(git add . || true) && (git commit || true) && (git push origin master || true)",
     "deploy": "git checkout master && ((git add . && git commit -m 'Redeploying...') || true) && git push origin master && (git checkout -b deploy || git checkout deploy) && git reset --hard master && git merge master -m 'Update deployment branch' && webpack --optimize-minimize && (rm -rf client/src || true) && ((git add . && git commit -m 'Minifying...') || true) && git push heroku deploy:master -f && git checkout master && heroku open"
   },
@@ -15,6 +15,7 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "mindful": "^1.3.0",
     "nodemon": "^1.11.0",
     "path": "^0.12.7",
     "react": "^15.4.1"
