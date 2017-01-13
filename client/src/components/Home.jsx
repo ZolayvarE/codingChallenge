@@ -1,11 +1,28 @@
 import React from 'react';
+import mindful from 'mindful';
 
-var Home = () => {
-  return (
-    <div>
-      This is the homepage!
-    </div>
-  );
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  initializeMap() {
+
+  }
+
+  componentWillMount() {
+    
+  }
+
+  render() {
+    return (
+      <div>
+        <div id='googleMap'>
+          
+        </div>
+      </div>
+    );
+  }
 };
 
 export default Home;

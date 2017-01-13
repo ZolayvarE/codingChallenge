@@ -26708,21 +26708,249 @@
 	  value: true
 	});
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _mindful = __webpack_require__(237);
+
+	var _mindful2 = _interopRequireDefault(_mindful);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var Home = function Home() {
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    'This is the homepage!'
-	  );
-	};
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Home = function (_React$Component) {
+	  _inherits(Home, _React$Component);
+
+	  function Home(props) {
+	    _classCallCheck(this, Home);
+
+	    return _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
+	  }
+
+	  _createClass(Home, [{
+	    key: 'initializeMap',
+	    value: function initializeMap() {}
+	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {}
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement('div', { id: 'googleMap' })
+	      );
+	    }
+	  }]);
+
+	  return Home;
+	}(_react2.default.Component);
+
+	;
 
 	exports.default = Home;
+
+/***/ },
+/* 237 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	const storage = {};
+
+	const persistentStorage = JSON.parse(localStorage._mindful || '{}') || {};
+
+	const validateInput = (input, value) => {
+	  if (typeof input === 'function') {
+	    throw new Error('Input cannot be a function!');
+	  } else if (Array.isArray(input)) {
+	    throw new Error('Input cannot be an array!');
+	  } else if (typeof input !== 'object') {
+	    var validInput = {};
+	    validInput[input] = value;
+	    return validInput;
+	  } else {
+	    return input;
+	  }
+	};
+
+
+	const _upsert = (key, value) => {
+	  if (storage[key] === undefined) {
+	    storage[key] = {
+	      value: value,
+	      subscribers: new Map,
+	    };
+	  } else {
+	    storage[key].value = value;
+	    storage[key].subscribers.forEach((subscriber) => {
+	      if (subscriber.isStateless() || subscriber.isMounted()) {
+	        subscriber.render();
+	      }
+	    });
+	  }
+	};
+
+
+	const setValueInStorage = (input, value) => {
+	  input = validateInput(input, value);
+	  for (var key in input) {
+	    _upsert(key, input[key]);
+	  }
+	};
+
+	const searchForValueInStorage = (input) => {
+	  if (storage[input] !== undefined) {
+	    return storage[input].value;
+	  }
+	};
+
+
+	const subscribeToValue = (component, key, updater, instance, callback) => {
+	  if (!storage[key]) {
+	    setValueInStorage(key, undefined);
+	  }
+
+	  if (storage[key] && storage[key].subscribers) {
+	    storage[key].subscribers.set(component, {
+	      render: callback,
+	      isMounted: () => {
+	        return updater.isMounted(instance);
+	      },
+	      isStateless: () => {
+	        return !component.__proto__.name;
+	      }
+	    });
+	  }
+	};
+
+
+	const updateValueInStorage = (input, callback) => {
+	  let oldValue = searchForValueInStorage(input);
+	  let newValue = callback(oldValue);
+	  setValueInStorage(input, newValue);
+	};
+
+
+	const toggleValueInStorage = function (input) {
+	  updateValueInStorage(function (value) {
+	    return !value;
+	  });
+	};
+
+
+	const persistValueInStorage = (input, value) => {
+	  input = validateInput(input, value);
+	  for (var key in input) {
+	    _upsert(key, input[key]);
+	    persistentStorage[key] = input[key];
+	  }
+	  localStorage._mindful = JSON.stringify(persistentStorage);
+	};
+
+
+	const clearValueFromStorage = (input) => {
+	  if (storage[input]) {
+	    setValueInStorage(input, undefined);
+	  }
+
+	  if (persistentStorage[input]) {
+	    delete persistentStorage[input];
+	    localStorage._mindful = JSON.stringify(persistentStorage);
+	  }
+	};
+
+
+	const mapGlobalStateToProps = (props, values) => {
+	  var newProps = {};
+	  for (var key in props) {
+	    newProps[key] = props[key];
+	  }
+
+	  values.forEach(function (value) {
+	    newProps[value] = searchForValueInStorage(value);
+	  });
+
+	  return newProps;
+	};
+
+
+	const initializeReactComponent = (component, props, context, updater) => {
+	  let initialized;
+	  if (!component.__proto__.name) {
+	    initialized = component(props, context, updater);
+	  } else {
+	    initialized = new component(props, context, updater);
+	  }
+	  return initialized;
+	};
+
+
+	const registerComponent = (component, ...keys) => {
+	  if (Array.isArray(keys[0])) {
+	    keys = keys[0];
+	  }
+	  return (props, context, updater) => {
+	    var saved = initializeReactComponent(component, props, context, updater);
+	    keys.forEach((key) => {
+	      subscribeToValue(component, key, updater, saved, () => {
+	        updater.enqueueForceUpdate(saved._owner ? saved._owner._instance : saved);
+	      });
+	    });
+	    return saved;
+	  };
+	};
+
+
+	setValueInStorage(persistentStorage);
+
+
+	const mindful = registerComponent;
+	mindful.set = setValueInStorage;
+	mindful.get = searchForValueInStorage;
+	mindful.retain = persistValueInStorage;
+	mindful.update = updateValueInStorage;
+	mindful.forget = clearValueFromStorage;
+	mindful.toggle = toggleValueInStorage;
+	mindful.subscribe = registerComponent;
+
+	module.exports = mindful;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /***/ }
 /******/ ]);
