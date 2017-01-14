@@ -26732,6 +26732,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _GoogleMap = __webpack_require__(238);
+
+	var _GoogleMap2 = _interopRequireDefault(_GoogleMap);
+
 	var _reactRouter = __webpack_require__(178);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -26742,114 +26746,22 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	window.mindful = _mindful2.default;
-
 	var Home = function (_React$Component) {
 	  _inherits(Home, _React$Component);
 
 	  function Home(props) {
 	    _classCallCheck(this, Home);
 
-	    var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
-
-	    window.initMap = _this.initMap.bind(_this);
-	    return _this;
+	    return _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
 	  }
 
 	  _createClass(Home, [{
-	    key: 'drawMap',
-	    value: function drawMap() {
-	      var location = _mindful2.default.get('location');
-	      var zoom = 15;
-
-	      if (!location) {
-	        zoom = 2;
-	        location = {
-	          latitude: 0,
-	          longitude: 0
-	        };
-	      }
-
-	      var map = new google.maps.Map(document.getElementById('googleMap'), {
-	        zoom: zoom,
-	        center: {
-	          lat: location.latitude,
-	          lng: location.longitude
-	        }
-	      });
-
-	      _mindful2.default.set('map', map);
-	    }
-	  }, {
-	    key: 'centerMap',
-	    value: function centerMap() {
-	      var location = _mindful2.default.get('location');
-	      var map = _mindful2.default.get('map');
-	      map.center = {
-	        lat: location.latitude,
-	        lng: location.longitude
-	      };
-	    }
-	  }, {
-	    key: 'initMap',
-	    value: function initMap() {
-	      if (_mindful2.default.get('map')) {
-	        this.centerMap();
-	      } else {
-	        this.drawMap();
-	      }
-	    }
-	  }, {
-	    key: 'getLocation',
-	    value: function getLocation(callback) {
-	      if (!navigator.geolocation) {
-	        alert('Geolocation is not supported by this browser.');
-	      } else {
-	        navigator.geolocation.getCurrentPosition(callback);
-	      }
-	    }
-	  }, {
-	    key: 'extend',
-	    value: function extend(object1, object2) {
-	      var object2 = object2 || {};
-	      for (var key in object1) {
-	        object2[key] = object1[key];
-	      }
-	      return object2;
-	    }
-	  }, {
-	    key: 'runGoogleScript',
-	    value: function runGoogleScript() {
-	      var oldScript = document.getElementById('googleMapsScript');
-	      if (!oldScript) {
-	        var newScript = document.createElement('script');
-	        newScript.id = 'googleMapsScript';
-	        newScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAQHWSAEQdwlUA00k32ytnXXjjhbrwkwWs&callback=initMap';
-	        document.body.appendChild(newScript);
-	      }
-	    }
-	  }, {
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      var _this2 = this;
-
-	      this.runGoogleScript();
-	      this.getLocation(function (location) {
-	        var locationCopy = _this2.extend(location.coords, {});
-	        _mindful2.default.retain('location', locationCopy);
-	        _this2.drawMap();
-	      });
-	    }
-	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement('div', { id: 'googleMap', style: {
-	            height: '400px',
-	            width: '50%'
-	          } })
+	        _react2.default.createElement(_GoogleMap2.default, null)
 	      );
 	    }
 	  }]);
@@ -27053,6 +26965,145 @@
 
 
 
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _mindful = __webpack_require__(237);
+
+	var _mindful2 = _interopRequireDefault(_mindful);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var GoogleMap = function (_React$Component) {
+	  _inherits(GoogleMap, _React$Component);
+
+	  function GoogleMap(props) {
+	    _classCallCheck(this, GoogleMap);
+
+	    var _this = _possibleConstructorReturn(this, (GoogleMap.__proto__ || Object.getPrototypeOf(GoogleMap)).call(this, props));
+
+	    window.initMap = _this.initMap.bind(_this);
+	    return _this;
+	  }
+
+	  _createClass(GoogleMap, [{
+	    key: 'drawMap',
+	    value: function drawMap() {
+	      var location = _mindful2.default.get('location');
+	      var zoom = 15;
+
+	      if (!location) {
+	        zoom = 2;
+	        location = {
+	          latitude: 0,
+	          longitude: 0
+	        };
+	      }
+
+	      var map = new google.maps.Map(document.getElementById('googleMap'), {
+	        zoom: zoom,
+	        center: {
+	          lat: location.latitude,
+	          lng: location.longitude
+	        }
+	      });
+
+	      _mindful2.default.set('map', map);
+	    }
+	  }, {
+	    key: 'centerMap',
+	    value: function centerMap() {
+	      var location = _mindful2.default.get('location');
+	      var map = _mindful2.default.get('map');
+	      map.center = {
+	        lat: location.latitude,
+	        lng: location.longitude
+	      };
+	    }
+	  }, {
+	    key: 'initMap',
+	    value: function initMap() {
+	      if (_mindful2.default.get('map')) {
+	        this.centerMap();
+	      } else {
+	        this.drawMap();
+	      }
+	    }
+	  }, {
+	    key: 'getLocation',
+	    value: function getLocation(callback) {
+	      if (!navigator.geolocation) {
+	        alert('Geolocation is not supported by this browser.');
+	      } else {
+	        navigator.geolocation.getCurrentPosition(callback);
+	      }
+	    }
+	  }, {
+	    key: 'extend',
+	    value: function extend(object1, object2) {
+	      var object2 = object2 || {};
+	      for (var key in object1) {
+	        object2[key] = object1[key];
+	      }
+	      return object2;
+	    }
+	  }, {
+	    key: 'runGoogleScript',
+	    value: function runGoogleScript() {
+	      var oldScript = document.getElementById('googleMapsScript');
+	      if (!oldScript) {
+	        var newScript = document.createElement('script');
+	        newScript.id = 'googleMapsScript';
+	        newScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAQHWSAEQdwlUA00k32ytnXXjjhbrwkwWs&callback=initMap';
+	        document.body.appendChild(newScript);
+	      }
+	    }
+	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var _this2 = this;
+
+	      this.runGoogleScript();
+	      this.getLocation(function (location) {
+	        var locationCopy = _this2.extend(location.coords, {});
+	        _mindful2.default.retain('location', locationCopy);
+	        _this2.drawMap();
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement('div', { id: 'googleMap', style: {
+	          height: '400px',
+	          width: '50%'
+	        } });
+	    }
+	  }]);
+
+	  return GoogleMap;
+	}(_react2.default.Component);
+
+	exports.default = GoogleMap;
 
 /***/ }
 /******/ ]);
