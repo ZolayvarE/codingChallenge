@@ -4,9 +4,10 @@ import mindful from 'mindful';
 
 var About = () => {
   if (!mindful.get('map')) {
-    
-    browserHistory.push('/');
-    
+    setTimeout(function () {
+      browserHistory.push('/');
+    })
+
     return (<div></div>);
 
   } else {    

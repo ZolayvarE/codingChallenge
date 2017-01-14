@@ -26686,8 +26686,9 @@
 
 	var About = function About() {
 	  if (!_mindful2.default.get('map')) {
-
-	    _reactRouter.browserHistory.push('/');
+	    setTimeout(function () {
+	      _reactRouter.browserHistory.push('/');
+	    });
 
 	    return _react2.default.createElement('div', null);
 	  } else {
@@ -26817,10 +26818,22 @@
 	      return object2;
 	    }
 	  }, {
+	    key: 'runGoogleScript',
+	    value: function runGoogleScript() {
+	      var oldScript = document.getElementById('googleMapsScript');
+	      if (!oldScript) {
+	        var newScript = document.createElement('script');
+	        newScript.id = 'googleMapsScript';
+	        newScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAQHWSAEQdwlUA00k32ytnXXjjhbrwkwWs&callback=initMap';
+	        document.body.appendChild(newScript);
+	      }
+	    }
+	  }, {
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
 	      var _this2 = this;
 
+	      this.runGoogleScript();
 	      this.getLocation(function (location) {
 	        var locationCopy = _this2.extend(location.coords, {});
 	        _mindful2.default.retain('location', locationCopy);

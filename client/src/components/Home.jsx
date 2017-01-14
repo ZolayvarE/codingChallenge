@@ -39,7 +39,7 @@ class Home extends React.Component {
     map.center = {
       lat: location.latitude,
       lng: location.longitude
-    }
+    };
   }
 
   initMap() {
@@ -66,7 +66,18 @@ class Home extends React.Component {
     return object2;
   }
 
+  runGoogleScript() {
+    let oldScript = document.getElementById('googleMapsScript');
+    if (!oldScript) {
+      let newScript = document.createElement('script');
+      newScript.id = 'googleMapsScript';
+      newScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAQHWSAEQdwlUA00k32ytnXXjjhbrwkwWs&callback=initMap';
+      document.body.appendChild(newScript);
+    }
+  }
+
   componentWillMount() {
+    this.runGoogleScript();
     this.getLocation((location) => {
       var locationCopy = this.extend(location.coords, {});
       mindful.retain('location', locationCopy);
