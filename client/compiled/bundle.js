@@ -26676,24 +26676,37 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRouter = __webpack_require__(178);
+
+	var _mindful = __webpack_require__(237);
+
+	var _mindful2 = _interopRequireDefault(_mindful);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var About = function About() {
+	  if (!_mindful2.default.get('map')) {
 
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(
-	      'h3',
+	    _reactRouter.browserHistory.push('/');
+
+	    return _react2.default.createElement('div', null);
+	  } else {
+
+	    return _react2.default.createElement(
+	      'div',
 	      null,
-	      'About'
-	    ),
-	    _react2.default.createElement(
-	      'p',
-	      null,
-	      'This page was coded using React'
-	    )
-	  );
+	      _react2.default.createElement(
+	        'h3',
+	        null,
+	        'About'
+	      ),
+	      _react2.default.createElement(
+	        'p',
+	        null,
+	        'This page was coded using React'
+	      )
+	    );
+	  }
 	};
 
 	exports.default = About;
@@ -26710,13 +26723,15 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _mindful = __webpack_require__(237);
+
+	var _mindful2 = _interopRequireDefault(_mindful);
+
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _mindful = __webpack_require__(237);
-
-	var _mindful2 = _interopRequireDefault(_mindful);
+	var _reactRouter = __webpack_require__(178);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26726,6 +26741,8 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	window.mindful = _mindful2.default;
+
 	var Home = function (_React$Component) {
 	  _inherits(Home, _React$Component);
 
@@ -26734,7 +26751,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
 
-	    window.drawMap = _this.drawMap;
+	    window.initMap = _this.initMap.bind(_this);
 	    return _this;
 	  }
 
@@ -26742,8 +26759,18 @@
 	    key: 'drawMap',
 	    value: function drawMap() {
 	      var location = _mindful2.default.get('location');
+	      var zoom = 15;
+
+	      if (!location) {
+	        zoom = 2;
+	        location = {
+	          latitude: 0,
+	          longitude: 0
+	        };
+	      }
+
 	      var map = new google.maps.Map(document.getElementById('googleMap'), {
-	        zoom: 15,
+	        zoom: zoom,
 	        center: {
 	          lat: location.latitude,
 	          lng: location.longitude
@@ -26751,6 +26778,25 @@
 	      });
 
 	      _mindful2.default.set('map', map);
+	    }
+	  }, {
+	    key: 'centerMap',
+	    value: function centerMap() {
+	      var location = _mindful2.default.get('location');
+	      var map = _mindful2.default.get('map');
+	      map.center = {
+	        lat: location.latitude,
+	        lng: location.longitude
+	      };
+	    }
+	  }, {
+	    key: 'initMap',
+	    value: function initMap() {
+	      if (_mindful2.default.get('map')) {
+	        this.centerMap();
+	      } else {
+	        this.drawMap();
+	      }
 	    }
 	  }, {
 	    key: 'getLocation',
@@ -26762,15 +26808,13 @@
 	      }
 	    }
 	  }, {
-	    key: 'runGoogleScript',
-	    value: function runGoogleScript() {
-	      var oldScript = document.getElementById('googleMapScript');
-	      if (!oldScript) {
-	        var script = document.createElement('script');
-	        script.id = 'googleMapsScript';
-	        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAQHWSAEQdwlUA00k32ytnXXjjhbrwkwWs&callback=drawMap';
-	        document.body.appendChild(script);
+	    key: 'extend',
+	    value: function extend(object1, object2) {
+	      var object2 = object2 || {};
+	      for (var key in object1) {
+	        object2[key] = object1[key];
 	      }
+	      return object2;
 	    }
 	  }, {
 	    key: 'componentWillMount',
@@ -26778,8 +26822,9 @@
 	      var _this2 = this;
 
 	      this.getLocation(function (location) {
-	        _mindful2.default.set('location', location.coords);
-	        _this2.runGoogleScript();
+	        var locationCopy = _this2.extend(location.coords, {});
+	        _mindful2.default.retain('location', locationCopy);
+	        _this2.drawMap();
 	      });
 	    }
 	  }, {
