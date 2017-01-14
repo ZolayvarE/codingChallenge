@@ -26732,22 +26732,66 @@
 	  function Home(props) {
 	    _classCallCheck(this, Home);
 
-	    return _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
+
+	    window.drawMap = _this.drawMap;
+	    return _this;
 	  }
 
 	  _createClass(Home, [{
-	    key: 'initializeMap',
-	    value: function initializeMap() {}
+	    key: 'drawMap',
+	    value: function drawMap() {
+	      var location = _mindful2.default.get('location');
+	      var map = new google.maps.Map(document.getElementById('googleMap'), {
+	        zoom: 15,
+	        center: {
+	          lat: location.latitude,
+	          lng: location.longitude
+	        }
+	      });
+
+	      _mindful2.default.set('map', map);
+	    }
+	  }, {
+	    key: 'getLocation',
+	    value: function getLocation(callback) {
+	      if (!navigator.geolocation) {
+	        alert('Geolocation is not supported by this browser.');
+	      } else {
+	        navigator.geolocation.getCurrentPosition(callback);
+	      }
+	    }
+	  }, {
+	    key: 'runGoogleScript',
+	    value: function runGoogleScript() {
+	      var oldScript = document.getElementById('googleMapScript');
+	      if (!oldScript) {
+	        var script = document.createElement('script');
+	        script.id = 'googleMapsScript';
+	        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAQHWSAEQdwlUA00k32ytnXXjjhbrwkwWs&callback=drawMap';
+	        document.body.appendChild(script);
+	      }
+	    }
 	  }, {
 	    key: 'componentWillMount',
-	    value: function componentWillMount() {}
+	    value: function componentWillMount() {
+	      var _this2 = this;
+
+	      this.getLocation(function (location) {
+	        _mindful2.default.set('location', location.coords);
+	        _this2.runGoogleScript();
+	      });
+	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement('div', { id: 'googleMap' })
+	        _react2.default.createElement('div', { id: 'googleMap', style: {
+	            height: '400px',
+	            width: '50%'
+	          } })
 	      );
 	    }
 	  }]);
