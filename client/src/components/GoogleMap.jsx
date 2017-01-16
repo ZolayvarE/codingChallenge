@@ -40,11 +40,12 @@ class GoogleMap extends React.Component {
   }
 
   initMap() {
-    if (mindful.get('map')) {
-      this.centerMap();
-    } else {
+    // if (mindful.get('map')) {
+      // this.centerMap();
+    // } else {
       this.drawMap();
-    }
+    // }
+    this.resizeMap();
   }
 
   getLocation(callback) {
@@ -73,12 +74,20 @@ class GoogleMap extends React.Component {
     }
   }
 
+  resizeMap() {
+    // let height = window.innerHeight;
+    // document.getElementById('googleMap').style = [
+    //   'height: ' + height - 100 + 'px',
+    //   'width: 90%',
+    // ].join('; ');
+  }
+
   componentWillMount() {
     this.runGoogleScript();
     this.getLocation((location) => {
       var locationCopy = this.extend(location.coords, {});
       mindful.retain('location', locationCopy);
-      this.drawMap();
+      this.initMap();
     });
   }
 
@@ -86,8 +95,8 @@ class GoogleMap extends React.Component {
   render() {
     return (
       <div id='googleMap' style={{
-        height: '400px',
-        width: '50%'
+        height: window.innerHeight - 50 + 'px',
+        width: '100%'
       }}>
             
       </div>

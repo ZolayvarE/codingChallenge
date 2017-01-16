@@ -1,6 +1,6 @@
 import mindful from 'mindful';
 import React from 'react';
-import GoogleMap from './GoogleMap.jsx'
+import GoogleMap from './GoogleMap.jsx';
 import { browserHistory } from 'react-router';
 
 class Home extends React.Component {
@@ -15,6 +15,6 @@ class Home extends React.Component {
       </div>
     );
   }
-};
+}
 
 export default Home;
