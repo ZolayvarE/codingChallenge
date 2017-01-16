@@ -27027,26 +27027,12 @@
 	      });
 
 	      _mindful2.default.set('map', map);
-	    }
-	  }, {
-	    key: 'centerMap',
-	    value: function centerMap() {
-	      var location = _mindful2.default.get('location');
-	      var map = _mindful2.default.get('map');
-	      map.center = {
-	        lat: location.latitude,
-	        lng: location.longitude
-	      };
+	      this.resizeMap();
 	    }
 	  }, {
 	    key: 'initMap',
 	    value: function initMap() {
-	      // if (mindful.get('map')) {
-	      // this.centerMap();
-	      // } else {
 	      this.drawMap();
-	      // }
-	      this.resizeMap();
 	    }
 	  }, {
 	    key: 'getLocation',
@@ -27079,13 +27065,7 @@
 	    }
 	  }, {
 	    key: 'resizeMap',
-	    value: function resizeMap() {
-	      // let height = window.innerHeight;
-	      // document.getElementById('googleMap').style = [
-	      //   'height: ' + height - 100 + 'px',
-	      //   'width: 90%',
-	      // ].join('; ');
-	    }
+	    value: function resizeMap() {}
 	  }, {
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
@@ -27097,12 +27077,15 @@
 	        _mindful2.default.retain('location', locationCopy);
 	        _this2.initMap();
 	      });
+	      window.onresize = function () {
+	        _this2.forceUpdate();
+	      }.bind(this);
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement('div', { id: 'googleMap', style: {
-	          height: window.innerHeight - 50 + 'px',
+	          height: window.innerHeight - 38 + 'px',
 	          width: '100%'
 	        } });
 	    }
