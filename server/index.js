@@ -11,7 +11,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client')));
 
-app.get('*', (req, res) => {
+app.get('/foodtrucks', function (req, res) {
+  res.send(helpers.getData());
+});
+
+app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
