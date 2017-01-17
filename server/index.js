@@ -5,9 +5,6 @@ const fs = require('fs');
 const helpers = require('./helpers.js');
 const app = express();
 
-
-
-
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client')));
 
