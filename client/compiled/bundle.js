@@ -26946,7 +26946,7 @@
 	  _createClass(Home, [{
 	    key: 'handleJSON',
 	    value: function handleJSON(json) {
-	      _mindful2.default.retain('foodtrucks', json);
+	      _mindful2.default.set('foodtrucks', json);
 	    }
 	  }, {
 	    key: 'handleResponse',
@@ -27018,6 +27018,21 @@
 	  }
 
 	  _createClass(GoogleMap, [{
+	    key: 'placeFoodTruckMarkers',
+	    value: function placeFoodTruckMarkers() {
+	      var foodtrucks = _mindful2.default.get('foodtrucks');
+
+	      foodtrucks.forEach(function (foodtruck) {
+	        var marker = new google.maps.Marker({
+	          position: {
+	            lat: Number(foodtruck.latitude),
+	            lng: Number(foodtruck.longitude)
+	          },
+	          map: _mindful2.default.get('map')
+	        });
+	      });
+	    }
+	  }, {
 	    key: 'initMap',
 	    value: function initMap() {
 	      var location = _mindful2.default.get('location');
@@ -27039,17 +27054,11 @@
 	        }
 	      });
 
-	      var foodtrucks = _mindful2.default.get('foodtrucks');
+	      _mindful2.default.set('map', map);
 
-	      foodtrucks.forEach(function (foodtruck) {
-	        var marker = new google.maps.Marker({
-	          position: {
-	            lat: Number(foodtruck.latitude),
-	            lng: Number(foodtruck.longitude)
-	          },
-	          map: map
-	        });
-	      });
+	      if (_mindful2.default.get('foodtrucks')) {
+	        this.placeFoodTruckMarkers();
+	      }
 	    }
 	  }, {
 	    key: 'getLocation',
@@ -27108,7 +27117,7 @@
 	  return GoogleMap;
 	}(_react2.default.Component);
 
-	exports.default = GoogleMap;
+	exports.default = (0, _mindful2.default)(GoogleMap, 'foodtrucks');
 
 /***/ }
 /******/ ]);
