@@ -26946,7 +26946,7 @@
 	  _createClass(Home, [{
 	    key: 'handleJSON',
 	    value: function handleJSON(json) {
-	      _mindful2.default.set('foodtrucks', json);
+	      _mindful2.default.retain('foodtrucks', json);
 	    }
 	  }, {
 	    key: 'handleResponse',
@@ -27036,8 +27036,7 @@
 	    key: 'initMap',
 	    value: function initMap() {
 	      var location = _mindful2.default.get('location');
-	      var zoom = 15;
-
+	      var zoom = 17;
 	      if (!location) {
 	        zoom = 2;
 	        location = {
@@ -27053,9 +27052,7 @@
 	          lng: location.longitude
 	        }
 	      });
-
 	      _mindful2.default.set('map', map);
-
 	      if (_mindful2.default.get('foodtrucks')) {
 	        this.placeFoodTruckMarkers();
 	      }

@@ -10,7 +10,7 @@ class Home extends React.Component {
   }
 
   handleJSON(json) {
-    mindful.set('foodtrucks', json);
+    mindful.retain('foodtrucks', json);
   }
 
   handleResponse(response) {

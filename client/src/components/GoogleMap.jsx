@@ -23,8 +23,7 @@ class GoogleMap extends React.Component {
 
   initMap() {
     let location = mindful.get('location');
-    let zoom = 15;
-
+    let zoom = 17;
     if (!location) {
       zoom = 2;
       location = {
@@ -40,9 +39,7 @@ class GoogleMap extends React.Component {
         lng: location.longitude
       }
     });
-
     mindful.set('map', map);
-
     if (mindful.get('foodtrucks')) {
       this.placeFoodTruckMarkers();
     }    
