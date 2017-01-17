@@ -13,7 +13,6 @@ class Home extends React.Component {
       return truck.status === 'APPROVED';
     });
     mindful.set('foodtrucks', trucks);
-    console.log('set trucks');
   }
 
   handleJSON(json) {

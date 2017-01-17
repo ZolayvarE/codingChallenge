@@ -26950,7 +26950,6 @@
 	        return truck.status === 'APPROVED';
 	      });
 	      _mindful2.default.set('foodtrucks', trucks);
-	      console.log('set trucks');
 	    }
 	  }, {
 	    key: 'handleJSON',
