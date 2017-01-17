@@ -6,22 +6,26 @@ import { browserHistory } from 'react-router';
 class Home extends React.Component {
   constructor(props) {
     super(props);
+  }
 
+  filterTrucks(trucks) {
+    trucks = trucks.filter((truck) => {
+      return truck.status === 'APPROVED';
+    });
+    mindful.set('foodtrucks', trucks);
+    console.log('set trucks');
   }
 
   handleJSON(json) {
-    mindful.retain('foodtrucks', json);
+    this.filterTrucks.call(this, json);
   }
 
   handleResponse(response) {
-    response.json().then(this.handleJSON);
+    response.json().then(this.handleJSON.bind(this));
   }
 
   componentWillMount() {
-
-    if (!mindful.get('foodtrucks')) {
-      fetch('/foodtrucks').then(this.handleResponse.bind(this));
-    }
+    fetch('/foodtrucks').then(this.handleResponse.bind(this));
   }
 
   render() {

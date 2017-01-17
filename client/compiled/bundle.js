@@ -26944,22 +26944,28 @@
 	  }
 
 	  _createClass(Home, [{
+	    key: 'filterTrucks',
+	    value: function filterTrucks(trucks) {
+	      trucks = trucks.filter(function (truck) {
+	        return truck.status === 'APPROVED';
+	      });
+	      _mindful2.default.set('foodtrucks', trucks);
+	      console.log('set trucks');
+	    }
+	  }, {
 	    key: 'handleJSON',
 	    value: function handleJSON(json) {
-	      _mindful2.default.retain('foodtrucks', json);
+	      this.filterTrucks.call(this, json);
 	    }
 	  }, {
 	    key: 'handleResponse',
 	    value: function handleResponse(response) {
-	      response.json().then(this.handleJSON);
+	      response.json().then(this.handleJSON.bind(this));
 	    }
 	  }, {
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-
-	      if (!_mindful2.default.get('foodtrucks')) {
-	        fetch('/foodtrucks').then(this.handleResponse.bind(this));
-	      }
+	      fetch('/foodtrucks').then(this.handleResponse.bind(this));
 	    }
 	  }, {
 	    key: 'render',
@@ -27021,22 +27027,25 @@
 	    key: 'placeFoodTruckMarkers',
 	    value: function placeFoodTruckMarkers() {
 	      var foodtrucks = _mindful2.default.get('foodtrucks');
-
-	      foodtrucks.forEach(function (foodtruck) {
-	        var marker = new google.maps.Marker({
-	          position: {
-	            lat: Number(foodtruck.latitude),
-	            lng: Number(foodtruck.longitude)
-	          },
-	          map: _mindful2.default.get('map')
+	      if (foodtrucks) {
+	        foodtrucks.forEach(function (foodtruck) {
+	          var marker = new google.maps.Marker({
+	            position: {
+	              lat: Number(foodtruck.latitude),
+	              lng: Number(foodtruck.longitude)
+	            },
+	            map: _mindful2.default.get('map')
+	          });
 	        });
-	      });
+	      } else {
+	        setTimeout(this.placeFoodTruckMarkers.bind(this), 250);
+	      }
 	    }
 	  }, {
 	    key: 'initMap',
 	    value: function initMap() {
 	      var location = _mindful2.default.get('location');
-	      var zoom = 17;
+	      var zoom = 16;
 	      if (!location) {
 	        zoom = 2;
 	        location = {
@@ -27053,9 +27062,7 @@
 	        }
 	      });
 	      _mindful2.default.set('map', map);
-	      if (_mindful2.default.get('foodtrucks')) {
-	        this.placeFoodTruckMarkers();
-	      }
+	      this.placeFoodTruckMarkers();
 	    }
 	  }, {
 	    key: 'getLocation',

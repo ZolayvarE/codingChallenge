@@ -9,21 +9,24 @@ class GoogleMap extends React.Component {
 
   placeFoodTruckMarkers() {
     let foodtrucks = mindful.get('foodtrucks');
-
-    foodtrucks.forEach(function (foodtruck) {
-      let marker = new google.maps.Marker({
-        position: {
-          lat: Number(foodtruck.latitude),
-          lng: Number(foodtruck.longitude)
-        },
-        map: mindful.get('map'),
+    if (foodtrucks) {
+      foodtrucks.forEach(function (foodtruck) {
+        let marker = new google.maps.Marker({
+          position: {
+            lat: Number(foodtruck.latitude),
+            lng: Number(foodtruck.longitude)
+          },
+          map: mindful.get('map'),
+        });
       });
-    });
+    } else {
+      setTimeout(this.placeFoodTruckMarkers.bind(this), 250);
+    }
   }
 
   initMap() {
     let location = mindful.get('location');
-    let zoom = 17;
+    let zoom = 16;
     if (!location) {
       zoom = 2;
       location = {
@@ -40,9 +43,7 @@ class GoogleMap extends React.Component {
       }
     });
     mindful.set('map', map);
-    if (mindful.get('foodtrucks')) {
-      this.placeFoodTruckMarkers();
-    }    
+    this.placeFoodTruckMarkers();
   }
 
   getLocation(callback) {
