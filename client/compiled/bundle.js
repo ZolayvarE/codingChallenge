@@ -26587,12 +26587,7 @@
 	  function App(props) {
 	    _classCallCheck(this, App);
 
-	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
-
-	    _this.state = {
-	      message: 'I am a stateful component!'
-	    };
-	    return _this;
+	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	  }
 
 	  _createClass(App, [{
@@ -26949,6 +26944,24 @@
 	  }
 
 	  _createClass(Home, [{
+	    key: 'handleJSON',
+	    value: function handleJSON(json) {
+	      _mindful2.default.retain('foodtrucks', json);
+	    }
+	  }, {
+	    key: 'handleResponse',
+	    value: function handleResponse(response) {
+	      response.json().then(this.handleJSON);
+	    }
+	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+
+	      if (!_mindful2.default.get('foodtrucks')) {
+	        fetch('/foodtrucks').then(this.handleResponse.bind(this));
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
@@ -27005,8 +27018,8 @@
 	  }
 
 	  _createClass(GoogleMap, [{
-	    key: 'drawMap',
-	    value: function drawMap() {
+	    key: 'initMap',
+	    value: function initMap() {
 	      var location = _mindful2.default.get('location');
 	      var zoom = 15;
 
@@ -27026,13 +27039,17 @@
 	        }
 	      });
 
-	      _mindful2.default.set('map', map);
-	      this.resizeMap();
-	    }
-	  }, {
-	    key: 'initMap',
-	    value: function initMap() {
-	      this.drawMap();
+	      var foodtrucks = _mindful2.default.get('foodtrucks');
+
+	      foodtrucks.forEach(function (foodtruck) {
+	        var marker = new google.maps.Marker({
+	          position: {
+	            lat: Number(foodtruck.latitude),
+	            lng: Number(foodtruck.longitude)
+	          },
+	          map: map
+	        });
+	      });
 	    }
 	  }, {
 	    key: 'getLocation',
@@ -27063,9 +27080,6 @@
 	        document.body.appendChild(newScript);
 	      }
 	    }
-	  }, {
-	    key: 'resizeMap',
-	    value: function resizeMap() {}
 	  }, {
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {

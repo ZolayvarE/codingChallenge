@@ -6,6 +6,22 @@ import { browserHistory } from 'react-router';
 class Home extends React.Component {
   constructor(props) {
     super(props);
+
+  }
+
+  handleJSON(json) {
+    mindful.retain('foodtrucks', json);
+  }
+
+  handleResponse(response) {
+    response.json().then(this.handleJSON);
+  }
+
+  componentWillMount() {
+
+    if (!mindful.get('foodtrucks')) {
+      fetch('/foodtrucks').then(this.handleResponse.bind(this));
+    }
   }
 
   render() {

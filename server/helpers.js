@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 let data = [];
-let cachedData = fs.readFileSync(path.join(__dirname, './data.txt'), 'utf8');
+let stringifiedData = fs.readFileSync(path.join(__dirname, './data.txt'), 'utf8');
 
 var saveData = function (dataString) {
   fs.writeFile(path.join(__dirname, './data.txt'), dataString, 'utf8', function (err) {
@@ -28,8 +28,8 @@ var requestData = function () {
 var getData = function () {
   if (Array.isArray(data) && data.length) {
     return data;
-  } else if (cachedData) {
-    data = JSON.parse(cachedData);
+  } else if (stringifiedData) {
+    data = JSON.parse(stringifiedData);
     return data;
   } else {
     requestData();
@@ -37,11 +37,16 @@ var getData = function () {
   }
 };
 
+var getStringifiedData = function () {
+  return stringifiedData;
+};
+
 getData();
 
 
 module.exports = {
-  getData: getData
+  getData: getData,
+  getStringifiedData: getStringifiedData
 };
 
 

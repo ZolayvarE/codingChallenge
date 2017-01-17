@@ -9,7 +9,8 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client')));
 
 app.get('/foodtrucks', function (req, res) {
-  res.send(helpers.getData());
+  console.log('serving foodtrucks!');
+  res.send(helpers.getStringifiedData());
 });
 
 app.get('*', function (req, res) {

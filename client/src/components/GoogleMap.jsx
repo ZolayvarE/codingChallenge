@@ -7,7 +7,7 @@ class GoogleMap extends React.Component {
     window.initMap = this.initMap.bind(this);
   }
 
-  drawMap() {
+  initMap() {
     let location = mindful.get('location');
     let zoom = 15;
 
@@ -27,12 +27,18 @@ class GoogleMap extends React.Component {
       }
     });
 
-    mindful.set('map', map);
-    this.resizeMap();
-  }
+    let foodtrucks = mindful.get('foodtrucks');
 
-  initMap() {
-    this.drawMap();
+    foodtrucks.forEach(function (foodtruck) {
+      let marker = new google.maps.Marker({
+        position: {
+          lat: Number(foodtruck.latitude),
+          lng: Number(foodtruck.longitude)
+        },
+        map: map,
+      });
+    });
+
   }
 
   getLocation(callback) {
@@ -59,10 +65,6 @@ class GoogleMap extends React.Component {
       newScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAQHWSAEQdwlUA00k32ytnXXjjhbrwkwWs&callback=initMap';
       document.body.appendChild(newScript);
     }
-  }
-
-  resizeMap() {
-
   }
 
   componentWillMount() {
